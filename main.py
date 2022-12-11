@@ -1,9 +1,7 @@
-gPlayingField = [['-'] * 3 for _ in range(3)] # g - глобальная переменная для формирования поля игры
-
-def printPlayingField():
+def printPlayingField(aField):
     vNum = '  0 1 2'
     print(vNum)
-    for row, i in zip(gPlayingField, vNum.split()):
+    for row, i in zip(aField, vNum.split()):
         print(f"{i} {' '.join(str(j) for j in row)}")
 
 def getUserInput(aField):
@@ -29,11 +27,23 @@ def getUserInput(aField):
         break
     return vX, vY
 
-# vCount = 0
-# while True:
+def isWin(aField, aCustomValue):
+    vList = []
+    vPosition = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+    for l in aField:
+        vList += l
+        vIdx = set([i for i, j in enumerate(vList) if j == aCustomValue])
+        for p in vPosition:
+            if len(vIdx.intersection(set(p))) == 3:
+                return True
+    return False
+
+# - основной код программы
+gPlayingField = [['-'] * 3 for _ in range(3)] # g - глобальная переменная для формирования поля игры
+
 for i in range(0, 10):
     if i == 9:
-        print('НИЧЬЯ')
+        print('\n ничья')
         break
 
     if i % 2 == 0:
@@ -41,10 +51,12 @@ for i in range(0, 10):
     else:
         vCustomValue = 'o'
 
-    printPlayingField()
+    printPlayingField(gPlayingField)
     x, y = getUserInput(gPlayingField)
     gPlayingField[x][y] = vCustomValue
 
-    # vCount += 1
+    if isWin(gPlayingField, vCustomValue):
+        print(f"\n Выиграл {vCustomValue}")
+        break
 
-printPlayingField()
+printPlayingField(gPlayingField)
